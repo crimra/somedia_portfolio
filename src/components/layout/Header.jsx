@@ -1,12 +1,13 @@
 import { motion } from 'framer-motion';
+import logo from '../../assets/logo.png';
 
 export const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-white/90 backdrop-blur-sm border-b border-gray-100">
       <div className="container mx-auto px-6 py-4 flex justify-between items-center">
         {/* Logo */}
-        <div className="text-2xl font-bold text-gray-900">
-          sOmedia
+        <div>
+          <img src={logo} alt="Logo sOmedia" className="h-8 w-auto" />
         </div>
         
         {/* Social Icons */}

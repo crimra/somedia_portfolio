@@ -98,10 +98,10 @@ export const HeroWithMascot = () => {
           </p>
           
           <div className="flex gap-3 justify-center flex-wrap">
-            <button className="px-5 py-2 bg-gray-900 text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors text-sm">
+            <button className="px-5 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 hover:scale-105 hover:shadow-lg transition-all duration-300 transform text-sm">
               Contact
             </button>
-            <button className="px-5 py-2 text-gray-700 font-semibold hover:text-gray-900 transition-colors text-sm">
+            <button className="px-5 py-2 border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white hover:scale-105 hover:shadow-lg transition-all duration-300 transform rounded-lg text-sm">
               Explore
             </button>
           </div>
