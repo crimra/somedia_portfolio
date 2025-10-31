@@ -1,29 +1,111 @@
 import { motion } from 'framer-motion';
 import DomeVideoGallery from '../gallery/DomeVideoGallery';
+// Import temporaire pour test
+import { getVideoUrlDirect, getVideoThumbnailDirect } from '../../utils/cloudinary-debug';
 
 const portfolioVideos = [
   {
-    video: 'https://res.cloudinary.com/demo/video/upload/v1/portfolio/brand_2025.mp4',
-    cover: 'https://res.cloudinary.com/demo/image/upload/v1/portfolio/brand_2025.jpg',
-    title: 'Campagne LCFM',
-    client: 'LCFM',
-    year: 2025,
+    video: getVideoUrlDirect('BGFI_zmkb55'),
+    cover: getVideoThumbnailDirect('BGFI_zmkb55', 0),
+    title: 'Campagne BGFI Bank',
+    client: 'BGFI Bank',
   },
   {
-    video: 'https://res.cloudinary.com/demo/video/upload/v1/portfolio/marketing_2025.mp4',
-    cover: 'https://res.cloudinary.com/demo/image/upload/v1/portfolio/marketing_2025.jpg',
-    title: 'Stratégie Digitale',
+    video: getVideoUrlDirect('Aerco_2_ani9li'),
+    cover: getVideoThumbnailDirect('Aerco_2_ani9li', 0),
+    title: 'Aérco Campaign 2',
+    client: 'Aérco',
+  },
+  {
+    video: getVideoUrlDirect('IMMO_vfgboy'),
+    cover: getVideoThumbnailDirect('IMMO_vfgboy', 0),
+    title: 'Immobilier Digital',
+    client: 'Immobilier',
+  },
+  {
+    video: getVideoUrlDirect('aerco_14_gcwe31'),
+    cover: getVideoThumbnailDirect('aerco_14_gcwe31', 0),
+    title: 'Aérco Série 14',
+    client: 'Aérco',
+  },
+  {
+    video: getVideoUrlDirect('Aerco_4_jrupjv'),
+    cover: getVideoThumbnailDirect('Aerco_4_jrupjv', 0),
+    title: 'Aérco Campaign 4',
+    client: 'Aérco',
+  },
+  {
+    video: getVideoUrlDirect('PEA_s8omps'),
+    cover: getVideoThumbnailDirect('PEA_s8omps', 0),
+    title: 'PEA Corporate',
+    client: 'PEA',
+  },
+  {
+    video: getVideoUrlDirect('Aerco_salon_EBENE_s9jwa9'),
+    cover: getVideoThumbnailDirect('Aerco_salon_EBENE_s9jwa9', 0),
+    title: 'Salon Ébène Aérco',
+    client: 'Aérco',
+  },
+  {
+    video: getVideoUrlDirect('BGFI_SPOT_2_gwqp2i'),
+    cover: getVideoThumbnailDirect('BGFI_SPOT_2_gwqp2i', 0),
+    title: 'BGFI Spot 2',
+    client: 'BGFI Bank',
+  },
+  {
+    video: getVideoUrlDirect('Aerco_16_bgwe68'),
+    cover: getVideoThumbnailDirect('Aerco_16_bgwe68', 0),
+    title: 'Aérco Série 16',
+    client: 'Aérco',
+  },
+  {
+    video: getVideoUrlDirect('AERCO_1_oqycrm'),
+    cover: getVideoThumbnailDirect('AERCO_1_oqycrm', 0),
+    title: 'Aérco Premier',
+    client: 'Aérco',
+  },
+  {
+    video: getVideoUrlDirect('BCI_OBOSSO_UB_z5qwhe'),
+    cover: getVideoThumbnailDirect('BCI_OBOSSO_UB_z5qwhe', 0),
+    title: 'BCI Obosso UB',
+    client: 'BCI',
+  },
+  {
+    video: getVideoUrlDirect('AERCO_1er_Mai_hnnvbh'),
+    cover: getVideoThumbnailDirect('AERCO_1er_Mai_hnnvbh', 0),
+    title: 'Aérco 1er Mai',
+    client: 'Aérco',
+  },
+  {
+    video: getVideoUrlDirect('A_tkmxoz'),
+    cover: getVideoThumbnailDirect('A_tkmxoz', 0),
+    title: 'Projet A',
     client: 'sOmedia',
-    year: 2025,
   },
   {
-    video: 'https://res.cloudinary.com/demo/video/upload/v1/portfolio/design_2025.mp4',
-    cover: 'https://res.cloudinary.com/demo/image/upload/v1/portfolio/design_2025.jpg',
-    title: 'Identité Visuelle',
-    client: 'Portfolio',
-    year: 2025,
+    video: getVideoUrlDirect('Lays_nouveau_look_exacfk'),
+    cover: getVideoThumbnailDirect('Lays_nouveau_look_exacfk', 0),
+    title: 'Lays Nouveau Look',
+    client: 'Lays',
   },
-  // Ajout vidéos ici
+  {
+    video: getVideoUrlDirect('video_publicitaire_de_la_nouvelle_boisson_jcxhme'),
+    cover: getVideoThumbnailDirect('video_publicitaire_de_la_nouvelle_boisson_jcxhme', 0),
+    title: 'Nouvelle Boisson',
+    client: 'Boisson',
+  },
+  {
+    video: getVideoUrlDirect('Spot_publicitaire_La_cathedrale_tcnwtq'),
+    cover: getVideoThumbnailDirect('Spot_publicitaire_La_cathedrale_tcnwtq', 0),
+    title: 'La Cathédrale',
+    client: 'Cathédrale',
+  },
+  {
+    video: getVideoUrlDirect('AERCO_0_rsit2u'),
+    cover: getVideoThumbnailDirect('AERCO_0_rsit2u', 0),
+    title: 'Aérco Zéro',
+    client: 'Aérco',
+  }
 ];
 
 export const Portfolio = () => {

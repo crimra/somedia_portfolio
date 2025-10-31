@@ -1,26 +1,26 @@
 import { useEffect, useMemo, useRef, useCallback, useState } from 'react';
 import { useGesture } from '@use-gesture/react';
 import ReactPlayer from 'react-player';
-import { getOptimizedVideoUrl, getVideoThumbnail } from '../../utils/cloudinary';
+import { getOptimizedVideoUrl, getVideoThumbnailAtTime } from '../../utils/cloudinary';
 
 const DEFAULT_VIDEOS = [
   {
-    video: getOptimizedVideoUrl('cqcpvbdqx4tqqvr1aojj'), // URLs optimisées par Cloudinary
-    cover: getVideoThumbnail('cqcpvbdqx4tqqvr1aojj'),
+    video: getOptimizedVideoUrl('BGFI_zmkb55'), // URLs good pour Cloudinary
+    cover: getVideoThumbnailAtTime('BGFI_zmkb55', 0),
     title: 'Campagne Publicitaire',
     client: 'sOmedia',
     year: '2024'
   },
   {
-    video: getOptimizedVideoUrl('jqrkajcmr4rn7vz8xjfq'),
-    cover: getVideoThumbnail('jqrkajcmr4rn7vz8xjfq'),
+    video: getOptimizedVideoUrl('BGFI_zmkb55'),
+    cover: getVideoThumbnailAtTime('BGFI_zmkb55', 5),
     title: 'Motion Design',
     client: 'Studio Creative',
     year: '2024'
   },
   {
-    video: getOptimizedVideoUrl('bqmwnhcjkpglj4ctvqoe'),
-    cover: getVideoThumbnail('bqmwnhcjkpglj4ctvqoe'),
+    video: getOptimizedVideoUrl('BGFI_zmkb55'),
+    cover: getVideoThumbnailAtTime('BGFI_zmkb55', 10),
     title: 'Film Corporate',
     client: 'Entreprise Tech',
     year: '2023'
@@ -101,9 +101,13 @@ export default function DomeVideoGallery({
   const viewerRef = useRef(null);
   const scrimRef = useRef(null);
   const focusedElRef = useRef(null);
+  const playerRef = useRef(null);
 
   const [playingVideo, setPlayingVideo] = useState(null);
   const [hoveredItem, setHoveredItem] = useState(null);
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
+  const [isMuted, setIsMuted] = useState(true);
+  const [isAutoRotating, setIsAutoRotating] = useState(true);
 
   const rotationRef = useRef({ x: 0, y: 0 });
   const startRotRef = useRef({ x: 0, y: 0 });
@@ -112,6 +116,7 @@ export default function DomeVideoGallery({
   const cancelTapRef = useRef(false);
   const movedRef = useRef(false);
   const inertiaRAF = useRef(null);
+  const autoRotationRAF = useRef(null);
   const pointerTypeRef = useRef('mouse');
   const tapTargetRef = useRef(null);
   const openingRef = useRef(false);
@@ -221,10 +226,22 @@ export default function DomeVideoGallery({
         vY *= frictionMul;
         if (Math.abs(vX) < stopThreshold && Math.abs(vY) < stopThreshold) {
           inertiaRAF.current = null;
+          // Redémarrer l'auto-rotation après l'inertie
+          setTimeout(() => {
+            if (!draggingRef.current && !focusedElRef.current) {
+              startAutoRotation();
+            }
+          }, 2000);
           return;
         }
         if (++frames > maxFrames) {
           inertiaRAF.current = null;
+          // Redémarrer l'auto-rotation après l'inertie
+          setTimeout(() => {
+            if (!draggingRef.current && !focusedElRef.current) {
+              startAutoRotation();
+            }
+          }, 2000);
           return;
         }
         const nextX = clamp(rotationRef.current.x - vY / 200, -maxVerticalRotationDeg, maxVerticalRotationDeg);
@@ -239,11 +256,50 @@ export default function DomeVideoGallery({
     [dragDampening, maxVerticalRotationDeg, stopInertia]
   );
 
+  // Fonctions d'auto-rotation
+  const stopAutoRotation = useCallback(() => {
+    if (autoRotationRAF.current) {
+      cancelAnimationFrame(autoRotationRAF.current);
+      autoRotationRAF.current = null;
+    }
+  }, []);
+
+  const startAutoRotation = useCallback(() => {
+    if (!isAutoRotating) return;
+    
+    let startTime = Date.now();
+    const rotationSpeed = 0.1; // degrés par frame 
+    
+    const animate = () => {
+      if (!isAutoRotating || draggingRef.current || focusedElRef.current) {
+        autoRotationRAF.current = null;
+        return;
+      }
+      
+      const currentY = rotationRef.current.y;
+      const newY = currentY + rotationSpeed;
+      rotationRef.current = { ...rotationRef.current, y: newY };
+      applyTransform(rotationRef.current.x, rotationRef.current.y);
+      
+      autoRotationRAF.current = requestAnimationFrame(animate);
+    };
+    
+    stopAutoRotation();
+    autoRotationRAF.current = requestAnimationFrame(animate);
+  }, [isAutoRotating]);
+
+  // Démarrer l'auto-rotation au montage
+  useEffect(() => {
+    startAutoRotation();
+    return stopAutoRotation;
+  }, [startAutoRotation, stopAutoRotation]);
+
   useGesture(
     {
       onDragStart: ({ event }) => {
         if (focusedElRef.current) return;
         stopInertia();
+        stopAutoRotation(); // Arrêter l'auto-rotation quand l'utilisateur glisse
 
         pointerTypeRef.current = event.pointerType || 'mouse';
         if (pointerTypeRef.current === 'touch') event.preventDefault();
@@ -309,6 +365,13 @@ export default function DomeVideoGallery({
 
           if (!isTap && (Math.abs(vx) > 0.005 || Math.abs(vy) > 0.005)) {
             startInertia(vx, vy);
+          } else {
+            // Redémarrer l'auto-rotation après 3 secondes d'inactivité
+            setTimeout(() => {
+              if (!draggingRef.current && !focusedElRef.current) {
+                startAutoRotation();
+              }
+            }, 3000);
           }
           startPosRef.current = null;
           cancelTapRef.current = !isTap;
@@ -332,6 +395,7 @@ export default function DomeVideoGallery({
     if (openingRef.current) return;
     openingRef.current = true;
     lockScroll();
+    stopAutoRotation(); // Arrêter l'auto-rotation quand on ouvre une vidéo
     const parent = el.parentElement;
     focusedElRef.current = el;
 
@@ -343,16 +407,27 @@ export default function DomeVideoGallery({
       year: parent.dataset.year
     };
 
+    console.log('🎬 URL vidéo:', videoData.video); // Debug temporaire
+
     setPlayingVideo(videoData);
+    setIsVideoPlaying(false); // Reset l'état de lecture
+    setIsMuted(true); // Commencer en muet pour l'autoplay
     rootRef.current?.setAttribute('data-enlarging', 'true');
   };
 
   const closeVideo = useCallback(() => {
     setPlayingVideo(null);
+    setIsVideoPlaying(false);
+    setIsMuted(true); // Reset le son en muet
     focusedElRef.current = null;
     rootRef.current?.removeAttribute('data-enlarging');
     openingRef.current = false;
     unlockScroll();
+    
+    // Redémarrer l'auto-rotation après fermeture du modal
+    setTimeout(() => {
+      setIsAutoRotating(true);
+    }, 0);
   }, [unlockScroll]);
 
   useEffect(() => {
@@ -362,6 +437,29 @@ export default function DomeVideoGallery({
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [closeVideo]);
+
+  // Effect pour gérer l'ouverture du modal vidéo
+  useEffect(() => {
+    if (playingVideo && playerRef.current) {
+      // Attendre que le player soit prêt puis forcer le démarrage
+      const timer = setTimeout(() => {
+        try {
+          if (playerRef.current && playerRef.current.getInternalPlayer) {
+            const internalPlayer = playerRef.current.getInternalPlayer();
+            if (internalPlayer && internalPlayer.play) {
+              internalPlayer.play().catch(err => {
+                console.log('Autoplay bloqué par le navigateur:', err);
+              });
+            }
+          }
+        } catch (error) {
+          console.log('Erreur lors du démarrage automatique:', error);
+        }
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    }
+  }, [playingVideo]);
 
   useEffect(() => {
     return () => {
@@ -611,8 +709,19 @@ export default function DomeVideoGallery({
                       if (openingRef.current) return;
                       openVideoFromElement(e.currentTarget);
                     }}
-                    onMouseEnter={() => setHoveredItem(i)}
-                    onMouseLeave={() => setHoveredItem(null)}
+                    onMouseEnter={() => {
+                      setHoveredItem(i);
+                      stopAutoRotation(); // Arrêter la rotation au survol
+                    }}
+                    onMouseLeave={() => {
+                      setHoveredItem(null);
+                      // Redémarrer la rotation après un délai
+                      setTimeout(() => {
+                        if (!focusedElRef.current && !draggingRef.current) {
+                          setIsAutoRotating(true);
+                        }
+                      }, 2000); // 2 secondes de pause après avoir quitté le survol
+                    }}
                     style={{
                       inset: '10px',
                       borderRadius: `var(--tile-radius, ${videoBorderRadius})`,
@@ -689,24 +798,73 @@ export default function DomeVideoGallery({
               ×
             </button>
             <div className="video-modal-player" onClick={e => e.stopPropagation()}>
-              <ReactPlayer
-                url={playingVideo.video}
-                playing
-                controls
-                width="100%"
-                height="100%"
-                config={{
-                  file: {
-                    attributes: {
-                      controlsList: 'nodownload'
-                    }
+              {/* Bouton de contrôle du son */}
+              <button
+                className="absolute top-4 right-16 z-10 bg-black bg-opacity-50 hover:bg-opacity-70 text-white p-3 rounded-full transition-all"
+                onClick={() => {
+                  const newMutedState = !isMuted;
+                  setIsMuted(newMutedState);
+                  if (playerRef.current) {
+                    playerRef.current.muted = newMutedState;
                   }
                 }}
+              >
+                {isMuted ? (
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+                  </svg>
+                ) : (
+                  <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+                  </svg>
+                )}
+              </button>
+              
+              {/* Test avec élément video natif */}
+              <video
+                ref={playerRef}
+                src={playingVideo.video}
+                controls
+                autoPlay
+                muted={isMuted}
+                playsInline
+                style={{ width: '100%', height: '100%' }}
+                onLoadStart={() => console.log('Video loading started')}
+                onCanPlay={() => console.log('Video can play')}
+                onPlay={() => {
+                  console.log('Video playing');
+                  setIsVideoPlaying(true);
+                }}
+                onPause={() => {
+                  console.log('Video paused');
+                  setIsVideoPlaying(false);
+                }}
+                onError={(e) => {
+                  console.error('Video error:', e.target.error);
+                }}
               />
+              {!isVideoPlaying && (
+                <div 
+                  className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 cursor-pointer"
+                  onClick={() => {
+                    if (playerRef.current) {
+                      playerRef.current.play().catch(err => {
+                        console.log('Erreur play:', err);
+                      });
+                    }
+                  }}
+                >
+                  <div className="w-20 h-20 bg-white bg-opacity-90 rounded-full flex items-center justify-center hover:bg-opacity-100 transition-all">
+                    <svg className="w-8 h-8 text-black ml-1" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M8 5v14l11-7z"/>
+                    </svg>
+                  </div>
+                </div>
+              )}
             </div>
             <div className="video-modal-info">
               <h2 className="video-modal-title">{playingVideo.title}</h2>
-              <p className="video-modal-details">{playingVideo.client} • {playingVideo.year}</p>
+              <p className="video-modal-details">{playingVideo.client}</p>
             </div>
           </div>
         )}
