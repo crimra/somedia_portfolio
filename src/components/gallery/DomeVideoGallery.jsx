@@ -1,25 +1,26 @@
 import { useEffect, useMemo, useRef, useCallback, useState } from 'react';
 import { useGesture } from '@use-gesture/react';
 import ReactPlayer from 'react-player';
+import { getOptimizedVideoUrl, getVideoThumbnail } from '../../utils/cloudinary';
 
 const DEFAULT_VIDEOS = [
   {
-    video: 'https://res.cloudinary.com/crimra/video/upload/v1730372554/cqcpvbdqx4tqqvr1aojj.mp4',
-    cover: 'https://res.cloudinary.com/crimra/image/upload/v1730372654/covers/video1_cover.jpg',
+    video: getOptimizedVideoUrl('cqcpvbdqx4tqqvr1aojj'), // URLs optimisées par Cloudinary
+    cover: getVideoThumbnail('cqcpvbdqx4tqqvr1aojj'),
     title: 'Campagne Publicitaire',
     client: 'sOmedia',
     year: '2024'
   },
   {
-    video: 'https://res.cloudinary.com/crimra/video/upload/v1730372556/jqrkajcmr4rn7vz8xjfq.mp4',
-    cover: 'https://res.cloudinary.com/crimra/image/upload/v1730372654/covers/video2_cover.jpg',
+    video: getOptimizedVideoUrl('jqrkajcmr4rn7vz8xjfq'),
+    cover: getVideoThumbnail('jqrkajcmr4rn7vz8xjfq'),
     title: 'Motion Design',
     client: 'Studio Creative',
     year: '2024'
   },
   {
-    video: 'https://res.cloudinary.com/crimra/video/upload/v1730372559/bqmwnhcjkpglj4ctvqoe.mp4',
-    cover: 'https://res.cloudinary.com/crimra/image/upload/v1730372654/covers/video3_cover.jpg',
+    video: getOptimizedVideoUrl('bqmwnhcjkpglj4ctvqoe'),
+    cover: getVideoThumbnail('bqmwnhcjkpglj4ctvqoe'),
     title: 'Film Corporate',
     client: 'Entreprise Tech',
     year: '2023'
