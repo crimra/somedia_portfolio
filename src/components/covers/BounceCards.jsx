@@ -4,6 +4,8 @@ import { gsap } from 'gsap';
 export default function BounceCards({
   className = '',
   images = [],
+  overlayColors = [], // Nouvelle prop pour les couleurs d'overlay
+  tooltipColors = [], // Nouvelle prop pour les couleurs des tooltips
   containerWidth = 400,
   containerHeight = 400,
   animationDelay = 0.5,
@@ -139,16 +141,31 @@ export default function BounceCards({
             onMouseLeave={resetSiblings}
           >
             {/* Image avec bordure et overflow */}
-            <div className="w-full h-full border-8 border-white rounded-[30px] overflow-hidden" style={{ boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)' }}>
-              <img className="w-full h-full object-cover" src={src} alt={`card-${idx}`} />
+            <div className="w-full h-full border-8 border-white rounded-[30px] overflow-hidden relative bg-white" style={{ boxShadow: '0 4px 10px rgba(0, 0, 0, 0.2)' }}>
+              <img 
+                className="w-full h-full object-cover opacity-20 group-hover:opacity-100 transition-opacity duration-300" 
+                src={src} 
+                alt={`card-${idx}`} 
+              />
+              
+              {/* Overlay color disparait au hover */}
+              {overlayColors[idx] && (
+                <div 
+                  className="absolute inset-0 opacity-100 group-hover:opacity-0 transition-opacity duration-300"
+                  style={{ 
+                    background: `linear-gradient(135deg, ${overlayColors[idx]}, ${overlayColors[idx].replace('0.7', '0.4')})`,
+                    mixBlendMode: 'multiply'
+                  }}
+                />
+              )}
             </div>
             
             {/* Bulle d'information au hover */}
             <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-[100]">
-              <div className="text-white text-xs px-3 py-2 rounded-lg shadow-xl whitespace-nowrap" style={{ backgroundColor: '#E84361' }}>
+              <div className="text-white text-xs px-3 py-2 rounded-lg shadow-xl whitespace-nowrap" style={{ backgroundColor: tooltipColors[idx] || '#E84361' }}>
                 {tooltips[idx] || `Carte ${idx + 1}`}
                 {/* Petite flèche vers le bas */}
-                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent" style={{ borderTopColor: '#E84361' }}></div>
+                <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent" style={{ borderTopColor: tooltipColors[idx] || '#E84361' }}></div>
               </div>
             </div>
           </div>

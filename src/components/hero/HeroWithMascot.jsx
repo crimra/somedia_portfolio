@@ -1,14 +1,35 @@
 import { motion } from 'framer-motion';
 import mascot from '../../assets/Kichoto.png';
 import BounceCards from '../covers/BounceCards';
+import { getVideoThumbnailDirect } from '../../utils/cloudinary-debug';
 
 const heroCardImages = [
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='200' height='200' fill='%23FF1493' rx='15'/%3E%3C/svg%3E", // Rose
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='200' height='200' fill='%23FBBF24' rx='15'/%3E%3C/svg%3E", // Jaune
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='200' height='200' fill='%2322D3EE' rx='15'/%3E%3C/svg%3E", // Cyan
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='200' height='200' fill='%23111827' rx='15'/%3E%3C/svg%3E", // Noir
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='200' height='200' fill='%23FBBF24' rx='15'/%3E%3C/svg%3E", // Jaune
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect width='200' height='200' fill='%23FF1493' rx='15'/%3E%3C/svg%3E"  // Rose
+  getVideoThumbnailDirect('BCI_OBOSSO_UB_z5qwhe', 0), // BCI
+  getVideoThumbnailDirect('video_publicitaire_de_la_nouvelle_boisson_jcxhme', 0), // Boisson
+  getVideoThumbnailDirect('AERCO_0_rsit2u', 0), // AERCO ZERO
+  getVideoThumbnailDirect('Lays_nouveau_look_exacfk', 0), // Lays
+  getVideoThumbnailDirect('AERCO_1er_Mai_hnnvbh', 0), // AERCO 1er mai
+  getVideoThumbnailDirect('AERCO_1_oqycrm', 0) // AERCO premier
+];
+
+// Couleurs d'overlay pour chaque carte (gardées comme avant)
+const heroCardColors = [
+  "rgba(255, 20, 147, 0.7)", // Rose pour BCI
+  "rgba(251, 191, 36, 0.7)", // Jaune pour Boisson  
+  "rgba(34, 211, 238, 0.7)", // Cyan pour AERCO ZERO
+  "rgba(17, 24, 39, 0.7)", // Noir pour Lays
+  "rgba(251, 191, 36, 0.7)", // Jaune pour AERCO 1er mai
+  "rgba(255, 20, 147, 0.7)"  // Rose pour AERCO premier
+];
+
+// Couleurs des bulles d'information (correspondantes aux cartes)
+const heroTooltipColors = [
+  "#FF1493", // Rose pour BCI
+  "#FBBF24", // Jaune pour Boisson  
+  "#22D3EE", // Cyan pour AERCO ZERO
+  "#111827", // Noir pour Lays
+  "#FBBF24", // Jaune pour AERCO 1er mai
+  "#FF1493"  // Rose pour AERCO premier
 ];
 
 const heroTransformStyles = [
@@ -21,12 +42,12 @@ const heroTransformStyles = [
 ];
 
 const heroTooltips = [
-  "Design & Branding",
-  "Développement Web",
-  "Marketing Digital", 
-  "Stratégie Creative",
-  "Communication",
-  "Innovation"
+  "BCI",
+  "Boisson",
+  "AERCO Lutte corruption", 
+  "Lays",
+  "AERCO 1er Mai",
+  "AERCO Travaux AA Neto"
 ];
 
 export const HeroWithMascot = () => {
@@ -73,6 +94,8 @@ export const HeroWithMascot = () => {
             <div className="relative">
               <BounceCards
                 images={heroCardImages}
+                overlayColors={heroCardColors}
+                tooltipColors={heroTooltipColors}
                 containerWidth={500}
                 containerHeight={160}
                 animationDelay={1.2}
