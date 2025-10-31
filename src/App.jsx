@@ -7,9 +7,16 @@ export default function App() {
   return (
     <div className="min-h-screen">
       <Header />
-      <HeroWithMascot />
-      <Portfolio />
-      <Contact />
+      <div className="pb-8 md:pb-12 bg-gradient-to-br from-white via-pink-50 to-white">
+        <HeroWithMascot />
+      </div>
+      <section id="portfolio">
+        <Portfolio />
+      </section>
+      <section id="contact">
+        <Contact />
+      </section>
     </div>
   );
 }
+

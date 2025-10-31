@@ -98,10 +98,22 @@ export const HeroWithMascot = () => {
           </p>
           
           <div className="flex gap-3 justify-center flex-wrap">
-            <button className="px-5 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 hover:scale-105 hover:shadow-lg transition-all duration-300 transform text-sm">
+            <button 
+              onClick={() => {
+                const contactSection = document.getElementById('contact');
+                contactSection?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="px-5 py-2 bg-primary text-white rounded-lg font-semibold hover:bg-primary/90 hover:scale-105 hover:shadow-lg transition-all duration-300 transform text-sm"
+            >
               Contact
             </button>
-            <button className="px-5 py-2 border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white hover:scale-105 hover:shadow-lg transition-all duration-300 transform rounded-lg text-sm">
+            <button 
+              onClick={() => {
+                const portfolioSection = document.getElementById('portfolio');
+                portfolioSection?.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="px-5 py-2 border-2 border-primary text-primary font-semibold hover:bg-primary hover:text-white hover:scale-105 hover:shadow-lg transition-all duration-300 transform rounded-lg text-sm"
+            >
               Explore
             </button>
           </div>
@@ -115,7 +127,7 @@ export const HeroWithMascot = () => {
         className="absolute top-20 right-10 rotate-12 hidden lg:block"
       >
         <div className="bg-yellow-300 p-3 rounded-lg shadow-lg text-sm font-bold text-gray-800 whitespace-nowrap">
-          Idée #1
+        #Kichoto
         </div>
       </motion.div>
     </section>
