@@ -424,10 +424,14 @@ export default function DomeVideoGallery({
     openingRef.current = false;
     unlockScroll();
     
-    // Redémarrer l'auto-rotation après fermeture du modal
+    // Maintenir la position sur la section Portfolio
     setTimeout(() => {
+      const portfolioSection = document.getElementById('portfolio');
+      if (portfolioSection) {
+        portfolioSection.scrollIntoView({ behavior: 'instant', block: 'start' });
+      }
       setIsAutoRotating(true);
-    }, 0);
+    }, 100);
   }, [unlockScroll]);
 
   useEffect(() => {
