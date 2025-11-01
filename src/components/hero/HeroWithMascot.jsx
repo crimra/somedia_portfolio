@@ -114,7 +114,7 @@ export const HeroWithMascot = () => {
           initial={{ y: 50, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.8, delay: 0.6, ease: "easeOut" }}
-          className="flex flex-col items-center space-y-3 text-center"
+          className="flex flex-col items-center space-y-3 text-center mt-8 md:mt-12"
         >
           <p className="text-sm md:text-base text-gray-600 max-w-sm p-3 rounded">
             L'agence de communication qui booste votre notoriété
