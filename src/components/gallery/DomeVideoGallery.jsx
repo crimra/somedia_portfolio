@@ -123,17 +123,32 @@ export default function DomeVideoGallery({
   const lastDragEndAt = useRef(0);
 
   const scrollLockedRef = useRef(false);
+  
+  const preventScrollEvent = useCallback((e) => {
+    // Empêcher le scroll seulement si l'événement vient de notre galerie
+    const target = e.target;
+    if (target.closest('.sphere-root')) {
+      e.preventDefault();
+    }
+  }, []);
+  
   const lockScroll = useCallback(() => {
     if (scrollLockedRef.current) return;
     scrollLockedRef.current = true;
-    document.body.classList.add('dg-scroll-lock');
-  }, []);
+    // Ne plus utiliser position: fixed, juste ajouter des listeners pour preventDefault
+    document.addEventListener('touchmove', preventScrollEvent, { passive: false });
+    document.addEventListener('wheel', preventScrollEvent, { passive: false });
+  }, [preventScrollEvent]);
+  
   const unlockScroll = useCallback(() => {
     if (!scrollLockedRef.current) return;
     if (rootRef.current?.getAttribute('data-enlarging') === 'true') return;
     scrollLockedRef.current = false;
-    document.body.classList.remove('dg-scroll-lock');
-  }, []);
+    
+    // Retirer les listeners
+    document.removeEventListener('touchmove', preventScrollEvent);
+    document.removeEventListener('wheel', preventScrollEvent);
+  }, [preventScrollEvent]);
 
   const items = useMemo(() => buildItems(videos, segments), [videos, segments]);
 
@@ -467,9 +482,11 @@ export default function DomeVideoGallery({
 
   useEffect(() => {
     return () => {
-      document.body.classList.remove('dg-scroll-lock');
+      // Cleanup: retirer les listeners au démontage
+      document.removeEventListener('touchmove', preventScrollEvent);
+      document.removeEventListener('wheel', preventScrollEvent);
     };
-  }, []);
+  }, [preventScrollEvent]);
 
   const cssStyles = `
     .sphere-root {
@@ -633,17 +650,6 @@ export default function DomeVideoGallery({
     
     .video-modal-close:hover {
       background: rgba(255, 255, 255, 0.3);
-    }
-    
-    body.dg-scroll-lock {
-      position: fixed !important;
-      top: 0;
-      left: 0;
-      width: 100% !important;
-      height: 100% !important;
-      overflow: hidden !important;
-      touch-action: none !important;
-      overscroll-behavior: contain !important;
     }
   `;
 
