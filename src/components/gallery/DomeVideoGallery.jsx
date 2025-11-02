@@ -5,7 +5,7 @@ import { getOptimizedVideoUrl, getVideoThumbnailAtTime } from '../../utils/cloud
 
 const DEFAULT_VIDEOS = [
   {
-    video: getOptimizedVideoUrl('BGFI_zmkb55'), // URLs good pour Cloudinary
+    video: getOptimizedVideoUrl('BGFI_zmkb55'),
     cover: getVideoThumbnailAtTime('BGFI_zmkb55', 0),
     title: 'Campagne Publicitaire',
     client: 'sOmedia',
@@ -422,8 +422,6 @@ export default function DomeVideoGallery({
       year: parent.dataset.year
     };
 
-    console.log('🎬 URL vidéo:', videoData.video); // Debug temporaire
-
     setPlayingVideo(videoData);
     setIsVideoPlaying(false); // Reset l'état de lecture
     setIsMuted(true); // Commencer en muet pour l'autoplay
@@ -467,12 +465,12 @@ export default function DomeVideoGallery({
             const internalPlayer = playerRef.current.getInternalPlayer();
             if (internalPlayer && internalPlayer.play) {
               internalPlayer.play().catch(err => {
-                console.log('Autoplay bloqué par le navigateur:', err);
+                // Autoplay bloqué par le navigateur
               });
             }
           }
         } catch (error) {
-          console.log('Erreur lors du démarrage automatique:', error);
+          // Erreur lors du démarrage automatique
         }
       }, 500);
       
@@ -839,18 +837,11 @@ export default function DomeVideoGallery({
                 muted={isMuted}
                 playsInline
                 style={{ width: '100%', height: '100%' }}
-                onLoadStart={() => console.log('Video loading started')}
-                onCanPlay={() => console.log('Video can play')}
                 onPlay={() => {
-                  console.log('Video playing');
                   setIsVideoPlaying(true);
                 }}
                 onPause={() => {
-                  console.log('Video paused');
                   setIsVideoPlaying(false);
-                }}
-                onError={(e) => {
-                  console.error('Video error:', e.target.error);
                 }}
               />
               {!isVideoPlaying && (
@@ -859,7 +850,7 @@ export default function DomeVideoGallery({
                   onClick={() => {
                     if (playerRef.current) {
                       playerRef.current.play().catch(err => {
-                        console.log('Erreur play:', err);
+                        // Erreur play
                       });
                     }
                   }}

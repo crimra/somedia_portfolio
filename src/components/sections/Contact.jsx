@@ -21,7 +21,6 @@ export const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Logique d'envoi du formulaire
-    console.log('Form submitted:', formData);
   };
 
   return (

@@ -13,7 +13,6 @@ const heroCardImages = [
   getVideoThumbnailDirect('AERCO_1_oqycrm', 0) // AERCO premier
 ];
 
-// Couleurs d'overlay pour chaque carte (gardées comme avant)
 const heroCardColors = [
   "rgba(255, 20, 147, 0.7)", // Rose pour BCI
   "rgba(251, 191, 36, 0.7)", // Jaune pour Boisson  
@@ -23,7 +22,6 @@ const heroCardColors = [
   "rgba(255, 20, 147, 0.7)"  // Rose pour AERCO premier
 ];
 
-// Couleurs des bulles d'information (correspondantes aux cartes)
 const heroTooltipColors = [
   "#FF1493", // Rose pour BCI
   "#FBBF24", // Jaune pour Boisson  

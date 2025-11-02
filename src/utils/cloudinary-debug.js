@@ -1,4 +1,3 @@
-// Version de test pour debug - URLs Cloudinary avec versions spécifiques
 const videoVersions = {
     'BGFI_zmkb55': 'v1761904164',
     'Aerco_2_ani9li': 'v1761904171',

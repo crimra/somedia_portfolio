@@ -1,7 +1,5 @@
-// Configuration Cloudinary coté client 
 const CLOUDINARY_CONFIG = {
-    cloud_name: 'dpk4mqxrg',
-    // Note: Seul cloud_name côté client pour les URLs publiques
+    cloud_name: 'dpk4mqxrg'
 };
 
 // Fonction construction URLs Cloudinary manuellement (sans SDK)

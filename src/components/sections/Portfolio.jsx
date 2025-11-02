@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
 import DomeVideoGallery from '../gallery/DomeVideoGallery';
-// Import temporaire pour test
 import { getVideoUrlDirect, getVideoThumbnailDirect } from '../../utils/cloudinary-debug';
 
 const portfolioVideos = [
